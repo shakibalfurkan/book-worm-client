@@ -2,17 +2,14 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-// import { SeparatorWithText } from "@/components/ui/separator";
-// import { loginSchema } from "@/schemas/auth.schema";
+// import { signupSchema } from "@/schemas/auth.schema";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -20,52 +17,65 @@ import { Controller, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-// import { useLoginUser } from "@/hooks/auth.hook";
-// import { useUser } from "@/context/user.provider";
 
-type TLoginFormData = {
+type TSignUpFormData = {
+  name: string;
   email: string;
+  photo: FileList;
   password: string;
-  rememberMe?: boolean;
 };
 
-export default function Login() {
+export default function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  //   const { refetchUser } = useUser();
 
+  const redirect = useSearchParams().get("redirect");
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams?.get("redirect");
+
+  //   const {
+  //     mutate: registerUser,
+  //     data: userData,
+  //     isSuccess,
+  //     isPending,
+  //     isError,
+  //     error,
+  //   } = useUserRegistration();
 
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<TLoginFormData>({
-    // resolver: zodResolver(loginSchema),
+  } = useForm<TSignUpFormData>({
+    // resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
-      rememberMe: false,
     },
   });
 
-  const onSubmit = async (data: TLoginFormData) => {
-    console.log(data);
+  const onSubmit = (data: TSignUpFormData) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("photo", data.photo[0]);
+
+    console.log("Form data ready:", {
+      name: data.name,
+      email: data.email,
+      photo: data.photo,
+    });
   };
 
   return (
     <section className="max-w-7xl mx-auto p-4">
-      <div className="flex flex-col items-center justify-center min-h-[87vh] w-full gap-8">
+      <div className="flex flex-col items-center justify-center min-h-[87vh] w-full gap-8 ">
         <div className="text-center">
-          <h3 className="text-xl font-medium text-muted-foreground font-serif">
-            Welcome back to BookWorm
-          </h3>
-          <h1 className="text-3xl font-semibold mt-1.5 mb-2 font-serif">
-            Sign In your account
+          <h1 className="text-3xl font-semibold mb-2 font-serif">
+            Sign Up your account
           </h1>
-          <p className="font-medium text-muted-foreground font-sans">
-            To use BookWorm, Please enter your details.
+          <p className="font-medium text-gray-500">
+            To use ClassyShop, Please enter your details.
           </p>
         </div>
         <div className="w-full max-w-md border rounded-lg p-6 bg-card">
@@ -75,14 +85,33 @@ export default function Login() {
               className="mb-5 border-red-500 bg-red-50"
             >
               <AlertCircleIcon />
-              <AlertTitle>Unable to sing in.</AlertTitle>
+              <AlertTitle>Unable to sing up.</AlertTitle>
               <AlertDescription>
                 <p>{error?.message}</p>
               </AlertDescription>
             </Alert>
           )} */}
-          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="name">Name *</FieldLabel>
+                    <Input
+                      {...field}
+                      id="name"
+                      type="name"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Enter your name"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
               <Controller
                 name="email"
                 control={control}
@@ -99,6 +128,28 @@ export default function Login() {
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="photo"
+                control={control}
+                render={({
+                  field: { value, onChange, ...field },
+                  fieldState,
+                }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="photo">Photo</FieldLabel>
+                    <Input
+                      {...field}
+                      id="photo"
+                      type="file"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        onChange(file);
+                      }}
+                    />
                   </Field>
                 )}
               />
@@ -125,53 +176,12 @@ export default function Login() {
                 />
                 <p
                   onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                  className={`absolute  ${
+                  className={`absolute w-fit  ${
                     errors.password ? "top-[42%]" : "top-[60%]"
                   } right-3 cursor-pointer text-lg`}
                 >
                   {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </p>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Controller
-                  name="rememberMe"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <FieldSet>
-                      <Field
-                        className="w-fit"
-                        orientation="horizontal"
-                        data-invalid={fieldState.invalid}
-                      >
-                        <Checkbox
-                          id="remember-checkbox"
-                          name={field.name}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          aria-invalid={fieldState.invalid}
-                          className="cursor-pointer"
-                        />
-                        <FieldLabel htmlFor={`remember-checkbox`} className="">
-                          Remember Me
-                        </FieldLabel>
-                      </Field>
-
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </FieldSet>
-                  )}
-                />
-
-                <div className="w-fit">
-                  <Link
-                    href="/forgot-password"
-                    className="font-medium text-primary underline text-sm"
-                  >
-                    Forgot Password
-                  </Link>
-                </div>
               </div>
             </FieldGroup>
 
@@ -180,18 +190,18 @@ export default function Login() {
               type="submit"
               className="w-full hover:cursor-pointer"
             >
-              {/* {isPending ? "Signing in..." : "Sign In"} */} Sign In
+              {/* {isPending ? "Signing Up..." : "Sign Up"} */} Sign Up
             </Button>
           </form>
           <div className="flex items-center justify-center gap-2 mt-3">
             <span className="text-sm font-medium text-gray-500">
-              Don&apos;t have an account?
+              Already have an account?
             </span>
             <Link
-              href="/signup"
+              href="/login"
               className="font-medium text-primary text-sm hover:underline"
             >
-              Sign Up
+              Sign In
             </Link>
           </div>
         </div>

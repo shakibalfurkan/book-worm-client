@@ -1,8 +1,11 @@
 "use client";
 import CreateGenreDialog from "@/components/dialogs/CreateGenreDialog";
+import EditGenreDialog from "@/components/dialogs/EditGenreDialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -10,7 +13,6 @@ import {
 } from "@/components/ui/table";
 import { useGetAllGenres } from "@/hooks/genre.hook";
 import { IGenre } from "@/interfaces/genre.interface";
-import { TbEdit } from "react-icons/tb";
 
 export default function Genres() {
   const {
@@ -30,6 +32,7 @@ export default function Genres() {
 
       <div className="mt-4">
         <Table className="">
+          {isError && <TableCaption>{error?.message}</TableCaption>}
           <TableHeader className="bg-card">
             <TableRow>
               <TableHead className="w-25">Serial</TableHead>
@@ -39,13 +42,30 @@ export default function Genres() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {isPending &&
+              [...Array(5)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell className="font-medium">
+                    <Skeleton className="h-4 w-4" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-40" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-10" />
+                  </TableCell>
+                </TableRow>
+              ))}
             {genres?.data?.map((genre: IGenre, i: number) => (
               <TableRow key={genre._id}>
                 <TableCell className="font-medium">{i + 1}</TableCell>
                 <TableCell>{genre.name}</TableCell>
                 <TableCell>{genre.description}</TableCell>
                 <TableCell>
-                  <TbEdit />
+                  <EditGenreDialog genre={genre} />
                 </TableCell>
               </TableRow>
             ))}

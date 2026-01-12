@@ -1,5 +1,6 @@
-"use client";
-import { AlertCircleIcon, PlusIcon } from "lucide-react";
+import { genreSchema } from "@/schemas/genre.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import {
   Dialog,
   DialogClose,
@@ -10,65 +11,54 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { genreSchema } from "@/schemas/genre.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { useCreateGenre } from "@/hooks/genre.hook";
-import { useEffect, useState } from "react";
+import { AlertCircleIcon } from "lucide-react";
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { TbEdit } from "react-icons/tb";
+import { IGenre } from "@/interfaces/genre.interface";
+import { useUpdateGenre } from "@/hooks/genre.hook";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type TGenreFormData = {
   name: string;
   description: string;
 };
 
-export default function CreateGenreDialog() {
+export default function EditGenreDialog({ genre }: { genre: IGenre }) {
   const [open, setOpen] = useState(false);
 
-  const { handleSubmit, control, reset } = useForm<TGenreFormData>({
+  const { handleSubmit, control } = useForm<TGenreFormData>({
     resolver: zodResolver(genreSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      name: genre?.name,
+      description: genre?.description,
     },
   });
 
-  const {
-    mutate: createGenre,
-    data: genreData,
-    isSuccess,
-    isPending,
-    isError,
-    error,
-  } = useCreateGenre();
-
-  console.log(genreData);
-  console.log(error);
-
-  useEffect(() => {
-    if (isSuccess) {
-      reset();
-    }
-  }, [isSuccess, reset]);
+  const { mutate: updateGenre, isError, error, isPending } = useUpdateGenre();
 
   const onSubmit = async (data: TGenreFormData) => {
-    createGenre(data, {
-      onSuccess: () => {
-        setOpen(false);
+    updateGenre(
+      {
+        id: genre?._id,
+        genreData: data,
       },
-    });
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      }
+    );
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <PlusIcon className="w-4 h-4 mr-1" />
-          <span>Add New Genre</span>
+        <Button variant={"secondary"} size={"icon"} className="cursor-pointer">
+          <TbEdit />
         </Button>
       </DialogTrigger>
 
@@ -76,7 +66,7 @@ export default function CreateGenreDialog() {
         {isError && (
           <Alert variant="destructive" className="mb-5">
             <AlertCircleIcon />
-            <AlertTitle>Unable to create genre.</AlertTitle>
+            <AlertTitle>Unable to update genre.</AlertTitle>
             <AlertDescription>
               <p>{error?.message}</p>
             </AlertDescription>
@@ -84,7 +74,7 @@ export default function CreateGenreDialog() {
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Create New Genre</DialogTitle>
+            <DialogTitle>Update The Genre</DialogTitle>
           </DialogHeader>
 
           <FieldGroup className="py-4">
@@ -138,7 +128,7 @@ export default function CreateGenreDialog() {
             </DialogClose>
 
             <Button disabled={isPending} type="submit">
-              {isPending ? "Creating..." : "Create"}
+              {isPending ? "Updating..." : "Update"}
             </Button>
           </DialogFooter>
         </form>

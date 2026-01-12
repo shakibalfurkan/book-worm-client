@@ -12,7 +12,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <div className="border-b bg-sidebar px-3 py-5 flex items-center justify-between">
+    <div className="border-b bg-sidebar px-3 py-4 flex items-center justify-between">
       <Logo />
       {user?.role === USER_ROLES.USER && (
         <div className="flex items-center gap-6">

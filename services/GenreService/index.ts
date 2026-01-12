@@ -11,7 +11,24 @@ export const createGenre = async (genreData: FieldValues) => {
       const message =
         error.response?.data?.message ||
         error.response?.data?.error ||
-        "Register failed";
+        "Failed to create genre";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
+export const getAllGenres = async () => {
+  try {
+    const { data } = await axiosClient.get("/genres");
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to get genres";
       throw new Error(message);
     }
 

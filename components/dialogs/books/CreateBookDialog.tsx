@@ -26,10 +26,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useCreateBook } from "@/hooks/book.hook";
+import { useGetAllGenres } from "@/hooks/genre.hook";
+import { IGenre } from "@/interfaces/genre.interface";
 import { bookSchema } from "@/schemas/book.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircleIcon, PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 type TBookFormData = {
   title: string;
@@ -41,6 +44,22 @@ type TBookFormData = {
 };
 export default function CreateBookDialog() {
   const [open, setOpen] = useState(false);
+  const {
+    data: genres,
+    isPending: isGenresPending,
+    isSuccess: isGenresSuccess,
+    isError: isGenresError,
+    error: genresError,
+  } = useGetAllGenres();
+
+  const {
+    mutate: createBook,
+    data: bookData,
+    isError,
+    error,
+    isPending,
+    isSuccess,
+  } = useCreateBook();
 
   const { handleSubmit, control, reset } = useForm<TBookFormData>({
     resolver: zodResolver(bookSchema),
@@ -53,9 +72,34 @@ export default function CreateBookDialog() {
     },
   });
 
+  console.log(bookData);
+
   const onSubmit = async (data: TBookFormData) => {
-    console.log(data);
+    const bookData = {
+      title: data.title,
+      author: data.author,
+      genre: data.genre,
+      description: data.description,
+      totalPages: data.totalPages,
+    };
+    const formData = new FormData();
+
+    formData.append("data", JSON.stringify(bookData));
+
+    formData.append("coverImage", data.coverImage);
+
+    createBook(formData, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+    }
+  }, [isSuccess, reset]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -66,8 +110,17 @@ export default function CreateBookDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-106.25">
-        {/* {isError && (
+      <DialogContent className="sm:max-w-300">
+        {isGenresError && (
+          <Alert variant="destructive" className="mb-5">
+            <AlertCircleIcon />
+            <AlertTitle>Unable to load genres.</AlertTitle>
+            <AlertDescription>
+              <p>{genresError?.message}</p>
+            </AlertDescription>
+          </Alert>
+        )}
+        {isError && (
           <Alert variant="destructive" className="mb-5">
             <AlertCircleIcon />
             <AlertTitle>Unable to create book.</AlertTitle>
@@ -75,7 +128,7 @@ export default function CreateBookDialog() {
               <p>{error?.message}</p>
             </AlertDescription>
           </Alert>
-        )} */}
+        )}
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Create New Book</DialogTitle>
@@ -125,10 +178,7 @@ export default function CreateBookDialog() {
               name="genre"
               control={control}
               render={({ field, fieldState }) => (
-                <Field
-                  orientation="responsive"
-                  data-invalid={fieldState.invalid}
-                >
+                <Field data-invalid={fieldState.invalid}>
                   <FieldContent>
                     <FieldLabel htmlFor="genre">Genre *</FieldLabel>
                     {fieldState.invalid && (
@@ -143,13 +193,17 @@ export default function CreateBookDialog() {
                     <SelectTrigger
                       id="genre"
                       aria-invalid={fieldState.invalid}
-                      className="min-w-30"
+                      className="w-full"
                     >
                       <SelectValue placeholder="Select a genre" />
                     </SelectTrigger>
                     <SelectContent position="item-aligned">
-                      <SelectItem value="auto">Auto</SelectItem>
-                      <SelectItem value="en">English</SelectItem>
+                      {isGenresSuccess &&
+                        genres?.data?.map((genre: IGenre) => (
+                          <SelectItem key={genre._id} value={genre._id}>
+                            {genre.name}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </Field>
@@ -228,11 +282,8 @@ export default function CreateBookDialog() {
               </Button>
             </DialogClose>
 
-            <Button
-              //   disabled={isPending}
-              type="submit"
-            >
-              {/* {isPending ? "Creating..." : "Create"} */} create
+            <Button disabled={isGenresPending || isPending} type="submit">
+              {isPending ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>
         </form>

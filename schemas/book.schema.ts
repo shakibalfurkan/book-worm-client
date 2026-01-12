@@ -18,7 +18,8 @@ export const bookSchema = z.object({
   description: z
     .string()
     .nonempty("Description is required.")
-    .max(3000, "Description must be less than 3000 characters")
+    .min(2, "Description must be at least 2 characters")
+    .max(1000, "Description must be less than 1000 characters")
     .trim(),
   coverImage: z
     .instanceof(File, { message: "Cover image is required" })

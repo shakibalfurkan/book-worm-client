@@ -20,3 +20,17 @@ export const signupSchema = z.object({
     )
     .trim(),
 });
+
+export const loginSchema = z.object({
+  email: z.email().nonempty("Email is required."),
+  password: z
+    .string()
+    .nonempty("Password is required.")
+    .min(8, { error: "Password must be 8 characters long" })
+    .max(20, { error: "Password must be less then 20 characters" })
+    .regex(
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+      "Password must contain at least one uppercase letter, one number, and one special character"
+    )
+    .trim(),
+});

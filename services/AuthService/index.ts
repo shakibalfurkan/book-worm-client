@@ -1,6 +1,7 @@
 import envConfig from "@/config/envConfig";
 import axiosClient from "@/lib/Axios/axios-client";
 import axios, { isAxiosError } from "axios";
+import { FieldValues } from "react-hook-form";
 
 export const registerUserIntoDB = async (userData: FormData) => {
   try {
@@ -16,6 +17,25 @@ export const registerUserIntoDB = async (userData: FormData) => {
         error.response?.data?.message ||
         error.response?.data?.error ||
         "Register failed";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
+export const loginUser = async (userData: FieldValues) => {
+  try {
+    const { data } = await axiosClient.post("/auth/login", userData);
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Login failed";
+
       throw new Error(message);
     }
 

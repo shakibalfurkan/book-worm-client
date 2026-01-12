@@ -11,17 +11,17 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-// import { SeparatorWithText } from "@/components/ui/separator";
-// import { loginSchema } from "@/schemas/auth.schema";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
-// import { useLoginUser } from "@/hooks/auth.hook";
-// import { useUser } from "@/context/user.provider";
+import { useRouter } from "next/navigation";
+import { loginSchema } from "@/schemas/auth.schema";
+import { useUserLogin } from "@/hooks/auth.hook";
+import { useUser } from "@/context/user.provider";
+import { USER_ROLES } from "@/constant";
 
 type TLoginFormData = {
   email: string;
@@ -31,14 +31,21 @@ type TLoginFormData = {
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  //   const { refetchUser } = useUser();
+  const { setUser } = useUser();
 
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams?.get("redirect");
+
+  const {
+    mutate: loginUser,
+    data: userData,
+    isSuccess,
+    isPending,
+    isError,
+    error,
+  } = useUserLogin();
 
   const { handleSubmit, control } = useForm<TLoginFormData>({
-    // resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -47,8 +54,25 @@ export default function Login() {
   });
 
   const onSubmit = async (data: TLoginFormData) => {
-    console.log(data);
+    loginUser({
+      email: data.email,
+      password: data.password,
+    });
   };
+
+  useEffect(() => {
+    if (isSuccess && userData?.data) {
+      console.log("Login successful:", userData);
+
+      setUser(userData.data);
+
+      if (userData.data.role === USER_ROLES.ADMIN) {
+        router.push("/admin/dashboard");
+      } else if (userData.data.role === USER_ROLES.USER) {
+        router.push("/library");
+      }
+    }
+  }, [isSuccess, userData, setUser, router]);
 
   return (
     <section className="max-w-7xl mx-auto p-4">
@@ -65,18 +89,15 @@ export default function Login() {
           </p>
         </div>
         <div className="w-full max-w-md border rounded-lg p-6 bg-card">
-          {/* {isError && (
-            <Alert
-              variant="destructive"
-              className="mb-5 border-red-500 bg-red-50"
-            >
+          {isError && (
+            <Alert variant="destructive" className="mb-5">
               <AlertCircleIcon />
               <AlertTitle>Unable to sing in.</AlertTitle>
               <AlertDescription>
                 <p>{error?.message}</p>
               </AlertDescription>
             </Alert>
-          )} */}
+          )}
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Controller
@@ -183,11 +204,11 @@ export default function Login() {
             </FieldGroup>
 
             <Button
-              //   disabled={isPending}
+              disabled={isPending}
               type="submit"
               className="w-full hover:cursor-pointer"
             >
-              {/* {isPending ? "Signing in..." : "Sign In"} */} Sign In
+              {isPending ? "Signing in..." : "Sign In"}
             </Button>
           </form>
           <div className="flex items-center justify-center gap-2 mt-3">

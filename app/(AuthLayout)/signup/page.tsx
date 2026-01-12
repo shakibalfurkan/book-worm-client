@@ -52,7 +52,6 @@ export default function Signup() {
     },
   });
   console.log(error);
-  console.log(userData);
 
   const onSubmit = (data: TSignUpFormData) => {
     const formData = new FormData();
@@ -152,7 +151,7 @@ export default function Signup() {
                   fieldState,
                 }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="photo">Photo</FieldLabel>
+                    <FieldLabel htmlFor="photo">Photo *</FieldLabel>
                     <Input
                       {...field}
                       id="photo"

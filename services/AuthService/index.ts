@@ -1,0 +1,40 @@
+import envConfig from "@/config/envConfig";
+import axiosClient from "@/lib/Axios/axios-client";
+import axios, { isAxiosError } from "axios";
+import { FieldValues } from "react-hook-form";
+
+export const registerUser = async (userData: FieldValues) => {
+  try {
+    const { data } = await axiosClient.post("/api/v1/register", userData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Register failed";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
+export const logout = async () => {
+  try {
+    const { data } = await axios.post(`${envConfig.baseApi}/api/v1/logout`);
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to logout";
+
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};

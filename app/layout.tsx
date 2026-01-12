@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Crimson_Text, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import Providers from "@/lib/Providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,7 +35,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${crimsonText.variable} ${playfairDisplay.variable}`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

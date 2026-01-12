@@ -21,7 +21,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 type TSignUpFormData = {
   name: string;
   email: string;
-  photo: FileList;
+  photo: File;
   password: string;
 };
 
@@ -55,16 +55,15 @@ export default function Signup() {
 
   const onSubmit = (data: TSignUpFormData) => {
     const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-    formData.append("photo", data.photo[0]);
 
-    console.log("Form data ready:", {
+    const userData = {
       name: data.name,
       email: data.email,
-      photo: data.photo,
-    });
+      password: data.password,
+    };
+    formData.append("data", JSON.stringify(userData));
+
+    formData.append("photo", data.photo);
   };
 
   return (

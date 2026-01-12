@@ -10,6 +10,6 @@ export const genreSchema = z.object({
   description: z
     .string()
     .nonempty("Description is required.")
-    .max(100, "Description must be less than 100 characters")
+    .max(200, "Description must be less than 200 characters")
     .trim(),
 });

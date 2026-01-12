@@ -1,5 +1,6 @@
 import {
   createGenre,
+  deleteGenre,
   getAllGenres,
   updateGenre,
 } from "@/services/GenreService";
@@ -39,6 +40,23 @@ export const useUpdateGenre = () => {
     mutationKey: ["UPDATE_GENRE"],
     mutationFn: async ({ id, genreData }) =>
       await updateGenre({ id, genreData }),
+
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["GET_GENRES"] });
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useDeleteGenre = () => {
+  const queryClient = useQueryClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return useMutation<any, Error, string>({
+    mutationKey: ["DELETE_GENRE"],
+    mutationFn: async (id) => await deleteGenre(id),
 
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["GET_GENRES"] });

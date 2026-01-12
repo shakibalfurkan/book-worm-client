@@ -1,5 +1,6 @@
 "use client";
 import CreateGenreDialog from "@/components/dialogs/CreateGenreDialog";
+import DeleteGenreDialog from "@/components/dialogs/DeleteGenreDialog";
 import EditGenreDialog from "@/components/dialogs/EditGenreDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -32,6 +33,7 @@ export default function Genres() {
 
       <div className="mt-4">
         <Table className="">
+          {genres?.data?.length === 0 && <TableCaption>No Genres</TableCaption>}
           {isError && <TableCaption>{error?.message}</TableCaption>}
           <TableHeader className="bg-card">
             <TableRow>
@@ -64,8 +66,9 @@ export default function Genres() {
                 <TableCell className="font-medium">{i + 1}</TableCell>
                 <TableCell>{genre.name}</TableCell>
                 <TableCell>{genre.description}</TableCell>
-                <TableCell>
+                <TableCell className="space-x-2">
                   <EditGenreDialog genre={genre} />
+                  <DeleteGenreDialog genre={genre} />
                 </TableCell>
               </TableRow>
             ))}

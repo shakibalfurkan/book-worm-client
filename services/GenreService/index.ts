@@ -51,7 +51,24 @@ export const updateGenre = async ({
       const message =
         error.response?.data?.message ||
         error.response?.data?.error ||
-        "Failed to update genres";
+        "Failed to update genre";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
+export const deleteGenre = async (id: string) => {
+  try {
+    const { data } = await axiosClient.delete(`/genres/${id}`);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to delete genre";
       throw new Error(message);
     }
 

@@ -61,6 +61,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setIsUserLoading(true);
     try {
       const response = await getUserFromDB();
+      console.log(response);
       setUser(response?.data || null);
     } catch (error) {
       console.error(error);

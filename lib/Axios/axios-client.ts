@@ -54,7 +54,7 @@ axiosClient.interceptors.response.use(
       try {
         // Refresh the token
         await axios.post(
-          `${envConfig.baseApi}/api/v1/refresh-token`,
+          `${envConfig.baseApi}/auth/refresh-token`,
           {},
           { withCredentials: true }
         );

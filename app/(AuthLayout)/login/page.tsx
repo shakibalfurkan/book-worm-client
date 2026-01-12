@@ -37,11 +37,7 @@ export default function Login() {
   const searchParams = useSearchParams();
   const redirect = searchParams?.get("redirect");
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<TLoginFormData>({
+  const { handleSubmit, control } = useForm<TLoginFormData>({
     // resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -103,35 +99,46 @@ export default function Login() {
                 )}
               />
 
-              <div className="relative">
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="password">Password *</FieldLabel>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="password">Password *</FieldLabel>
+
+                    {/* Wrapper for input + icon */}
+                    <div className="relative">
                       <Input
                         {...field}
                         id="password"
                         type={isPasswordVisible ? "text" : "password"}
                         aria-invalid={fieldState.invalid}
                         placeholder="Password"
+                        className="pr-10"
                       />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <p
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                  className={`absolute  ${
-                    errors.password ? "top-[42%]" : "top-[60%]"
-                  } right-3 cursor-pointer text-lg`}
-                >
-                  {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-                </p>
-              </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                        className="absolute top-1/2 -translate-y-1/2 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={
+                          isPasswordVisible ? "Hide password" : "Show password"
+                        }
+                      >
+                        {isPasswordVisible ? (
+                          <FaEyeSlash className="h-4 w-4" />
+                        ) : (
+                          <FaEye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
 
               <div className="flex items-center justify-between">
                 <Controller

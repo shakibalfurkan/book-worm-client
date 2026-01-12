@@ -9,14 +9,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-// import { signupSchema } from "@/schemas/auth.schema";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useUserRegistration } from "@/hooks/auth.hook";
+import { signupSchema } from "@/schemas/auth.schema";
+import { USER_ROLES } from "@/constant";
+import { useUser } from "@/context/user.provider";
 
 type TSignUpFormData = {
   name: string;
@@ -27,31 +30,29 @@ type TSignUpFormData = {
 
 export default function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const { setUser } = useUser();
 
-  const redirect = useSearchParams().get("redirect");
   const router = useRouter();
 
-  //   const {
-  //     mutate: registerUser,
-  //     data: userData,
-  //     isSuccess,
-  //     isPending,
-  //     isError,
-  //     error,
-  //   } = useUserRegistration();
-
   const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<TSignUpFormData>({
-    // resolver: zodResolver(signupSchema),
+    mutate: registerUser,
+    data: userData,
+    isSuccess,
+    isPending,
+    isError,
+    error,
+  } = useUserRegistration();
+
+  const { handleSubmit, control } = useForm<TSignUpFormData>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
     },
   });
+  console.log(error);
+  console.log(userData);
 
   const onSubmit = (data: TSignUpFormData) => {
     const formData = new FormData();
@@ -64,7 +65,22 @@ export default function Signup() {
     formData.append("data", JSON.stringify(userData));
 
     formData.append("photo", data.photo);
+    registerUser(formData);
   };
+
+  useEffect(() => {
+    if (isSuccess && userData?.data) {
+      console.log("Registration successful:", userData);
+
+      setUser(userData.data);
+
+      if (userData.data.role === USER_ROLES.ADMIN) {
+        router.push("/admin/dashboard");
+      } else if (userData.data.role === USER_ROLES.USER) {
+        router.push("/library");
+      }
+    }
+  }, [isSuccess, userData, setUser, router]);
 
   return (
     <section className="max-w-7xl mx-auto p-4">
@@ -74,22 +90,19 @@ export default function Signup() {
             Sign Up your account
           </h1>
           <p className="font-medium text-gray-500">
-            To use ClassyShop, Please enter your details.
+            To use BookWorm, Please enter your details.
           </p>
         </div>
         <div className="w-full max-w-md border rounded-lg p-6 bg-card">
-          {/* {isError && (
-            <Alert
-              variant="destructive"
-              className="mb-5 border-red-500 bg-red-50"
-            >
+          {isError && (
+            <Alert variant="destructive" className="mb-5 ">
               <AlertCircleIcon />
               <AlertTitle>Unable to sing up.</AlertTitle>
               <AlertDescription>
                 <p>{error?.message}</p>
               </AlertDescription>
             </Alert>
-          )} */}
+          )}
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Controller
@@ -149,47 +162,61 @@ export default function Signup() {
                         onChange(file);
                       }}
                     />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
                   </Field>
                 )}
               />
 
-              <div className="relative">
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="password">Password *</FieldLabel>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="password">Password *</FieldLabel>
+
+                    {/* Wrapper for input + icon */}
+                    <div className="relative">
                       <Input
                         {...field}
                         id="password"
                         type={isPasswordVisible ? "text" : "password"}
                         aria-invalid={fieldState.invalid}
-                        placeholder="Password"
+                        placeholder="At least 8 characters"
+                        className="pr-10"
                       />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <p
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                  className={`absolute w-fit  ${
-                    errors.password ? "top-[42%]" : "top-[60%]"
-                  } right-3 cursor-pointer text-lg`}
-                >
-                  {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-                </p>
-              </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                        className="absolute top-1/2 -translate-y-1/2 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={
+                          isPasswordVisible ? "Hide password" : "Show password"
+                        }
+                      >
+                        {isPasswordVisible ? (
+                          <FaEyeSlash className="h-4 w-4" />
+                        ) : (
+                          <FaEye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
             </FieldGroup>
 
             <Button
-              //   disabled={isPending}
+              disabled={isPending}
               type="submit"
               className="w-full hover:cursor-pointer"
             >
-              {/* {isPending ? "Signing Up..." : "Sign Up"} */} Sign Up
+              {isPending ? "Signing Up..." : "Sign Up"}
             </Button>
           </form>
           <div className="flex items-center justify-center gap-2 mt-3">

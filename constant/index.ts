@@ -7,3 +7,8 @@ export const AUTH_ROUTES = [
 
 export const isAuthRoute = (url?: string) =>
   AUTH_ROUTES.some((route) => url?.includes(route));
+
+export const USER_ROLES = {
+  USER: "USER",
+  ADMIN: "ADMIN",
+} as const;

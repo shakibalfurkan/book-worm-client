@@ -10,7 +10,6 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { genreSchema } from "@/schemas/genre.schema";
 import { zodResolver } from "@hookform/resolvers/zod";

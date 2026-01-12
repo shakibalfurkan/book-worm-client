@@ -19,8 +19,7 @@ import { Textarea } from "../ui/textarea";
 import { TbEdit } from "react-icons/tb";
 import { IGenre } from "@/interfaces/genre.interface";
 import { useUpdateGenre } from "@/hooks/genre.hook";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 
 type TGenreFormData = {
   name: string;

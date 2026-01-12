@@ -51,7 +51,6 @@ export default function Signup() {
       password: "",
     },
   });
-  console.log(error);
 
   const onSubmit = (data: TSignUpFormData) => {
     const formData = new FormData();

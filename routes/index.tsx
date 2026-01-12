@@ -30,8 +30,8 @@ export const adminSidebarRoutes = [
     icon: <RiDashboardFill />,
   },
   {
-    path: "/admin/books",
-    label: "Books",
+    path: "/admin/book-management",
+    label: "Manage Books",
     icon: <TbBooks />,
   },
   {

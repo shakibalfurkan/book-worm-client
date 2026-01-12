@@ -3,7 +3,7 @@ import axiosClient from "@/lib/Axios/axios-client";
 import axios, { isAxiosError } from "axios";
 import { FieldValues } from "react-hook-form";
 
-export const registerUser = async (userData: FieldValues) => {
+export const registerUserIntoDB = async (userData: FieldValues) => {
   try {
     const { data } = await axiosClient.post("/api/v1/register", userData);
     return data;
@@ -13,6 +13,24 @@ export const registerUser = async (userData: FieldValues) => {
         error.response?.data?.message ||
         error.response?.data?.error ||
         "Register failed";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
+export const getUserFromDB = async () => {
+  try {
+    const { data } = await axiosClient.get(`/api/v1/me`);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to get user from DB";
+
       throw new Error(message);
     }
 

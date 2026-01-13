@@ -6,11 +6,11 @@ import { BiSolidVideos } from "react-icons/bi";
 
 export const userNavRoutes = [
   {
-    path: "/my-library",
+    path: "/user/my-library",
     label: "Library",
   },
   {
-    path: "/dashboard",
+    path: "/user/dashboard",
     label: "Dashboard",
   },
   {

@@ -4,7 +4,7 @@ export interface IBook {
   _id: string;
   title: string;
   author: string;
-  genre: IGenre | string;
+  genre: IGenre;
   description: string;
   coverImage: string;
   totalPages: number;

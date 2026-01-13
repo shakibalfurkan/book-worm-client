@@ -56,7 +56,8 @@ export default function BookManagement() {
             <TableRow>
               <TableHead className="w-25">Image</TableHead>
               <TableHead>Title</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead>Author</TableHead>
+              <TableHead>Genre</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -68,13 +69,17 @@ export default function BookManagement() {
                     <Skeleton className="h-10 w-10 rounded-md" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="h-4 w-24" />
-                  </TableCell>
-                  <TableCell>
                     <Skeleton className="h-4 w-40" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="h-4 w-10" />
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell className="flex gap-2">
+                    <Skeleton className="h-9 w-9" />
+                    <Skeleton className="h-9 w-9" />
                   </TableCell>
                 </TableRow>
               ))}
@@ -87,11 +92,8 @@ export default function BookManagement() {
                   </Avatar>
                 </TableCell>
                 <TableCell>{book?.title}</TableCell>
-                <TableCell>
-                  <div className="max-w-100 truncate" title={book?.description}>
-                    {book?.description}
-                  </div>
-                </TableCell>
+                <TableCell>{book?.author}</TableCell>
+                <TableCell>{book?.genre?.name}</TableCell>
                 <TableCell className="space-x-2">
                   <EditBookDialog book={book} />
                   <DeleteBookDialog id={book?._id} />

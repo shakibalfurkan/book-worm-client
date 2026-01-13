@@ -75,7 +75,7 @@ export default function Signup() {
       if (userData.data.role === USER_ROLES.ADMIN) {
         router.push("/admin/dashboard");
       } else if (userData.data.role === USER_ROLES.USER) {
-        router.push("/library");
+        router.push("/user/my-library");
       }
     }
   }, [isSuccess, userData, setUser, router]);

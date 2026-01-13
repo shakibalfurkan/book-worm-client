@@ -63,7 +63,11 @@ export const getUserFromDB = async () => {
 
 export const logout = async () => {
   try {
-    const { data } = await axios.post(`${envConfig.baseApi}/auth/logout`);
+    const { data } = await axios.post(
+      `${envConfig.baseApi}/auth/logout`,
+      {},
+      { withCredentials: true }
+    );
 
     return data;
   } catch (error) {

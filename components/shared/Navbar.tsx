@@ -5,14 +5,33 @@ import Logo from "./Logo";
 import { USER_ROLES } from "@/constant";
 import { userNavRoutes } from "@/routes";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { logout } from "@/services/AuthService";
 
 export default function Navbar() {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const result = await logout();
+
+    if (result?.success) {
+      setUser(null);
+      router.push("/login");
+    }
+  };
 
   return (
-    <div className="border-b bg-sidebar px-3 py-4 flex items-center justify-between">
+    <div className="border-b bg-sidebar px-4 py-4 flex items-center justify-between">
       <Logo />
       {user?.role === USER_ROLES.USER && (
         <div className="flex items-center gap-6">
@@ -30,12 +49,24 @@ export default function Navbar() {
         </div>
       )}
 
-      <Avatar className="size-10">
-        <AvatarImage src={user?.photo} alt={user?.name} />
-        <AvatarFallback className="uppercase bg-brand-hover text-xl text-black font-semibold">
-          {user?.name.slice(0, 1)}
-        </AvatarFallback>
-      </Avatar>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="rounded-full">
+          <Avatar className="size-10">
+            <AvatarImage src={user?.photo} alt={user?.name} />
+            <AvatarFallback className="uppercase bg-brand-hover text-xl text-black font-semibold">
+              {user?.name.slice(0, 1)}
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+            Log out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

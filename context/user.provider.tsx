@@ -1,3 +1,4 @@
+import { isAuthRoute } from "@/constant";
 import { getUserFromDB } from "@/services/AuthService";
 
 import {
@@ -40,8 +41,6 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isUserLoading, setIsUserLoading] = useState(true);
 
-  console.log(user);
-
   const handleUser = async () => {
     setIsUserLoading(true);
     try {
@@ -57,7 +56,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    handleUser();
+    if (!isAuthRoute(window.location.pathname)) {
+      handleUser();
+    }
   }, []);
 
   return (

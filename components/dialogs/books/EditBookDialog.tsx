@@ -57,10 +57,7 @@ export default function EditBookDialog({ book }: { book: IBook }) {
     defaultValues: {
       title: book?.title || "",
       author: book?.author || "",
-      genre:
-        typeof book?.genre === "object" && "_id" in book.genre
-          ? book.genre._id
-          : (book?.genre as string) || "",
+      genre: book.genre._id || "",
       description: book?.description || "",
       totalPages: book?.totalPages?.toString() || "",
     },

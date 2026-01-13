@@ -65,7 +65,11 @@ export default function Genres() {
               <TableRow key={genre._id}>
                 <TableCell className="font-medium">{i + 1}</TableCell>
                 <TableCell>{genre.name}</TableCell>
-                <TableCell>{genre.description}</TableCell>
+                <TableCell>
+                  <div className="max-w-100 truncate" title={genre.description}>
+                    {genre.description}
+                  </div>
+                </TableCell>
                 <TableCell className="space-x-2">
                   <EditGenreDialog genre={genre} />
                   <DeleteGenreDialog genre={genre} />

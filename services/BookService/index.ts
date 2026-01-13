@@ -1,3 +1,4 @@
+import { IBookFilters } from "@/interfaces/book.interface";
 import axiosClient from "@/lib/Axios/axios-client";
 import { isAxiosError } from "axios";
 
@@ -11,6 +12,54 @@ export const createBook = async (bookData: FormData) => {
         error.response?.data?.message ||
         error.response?.data?.error ||
         "Failed to create genre";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
+export const getAllBooks = async (filters: IBookFilters) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const params: Record<string, any> = {};
+
+    if (filters.searchTerm) params.searchTerm = filters.searchTerm;
+    if (filters.genre && filters.genre.length > 0) {
+      params.genre = filters.genre.join(",");
+    }
+    if (filters.minRating) params.minRating = filters.minRating;
+    if (filters.maxRating) params.maxRating = filters.maxRating;
+    if (filters.sortBy) params.sortBy = filters.sortBy;
+    if (filters.sortOrder) params.sortOrder = filters.sortOrder;
+    if (filters.page) params.page = filters.page;
+    if (filters.limit) params.limit = filters.limit;
+
+    const { data } = await axiosClient.get(`/books`, { params });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to get books";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
+export const deleteBook = async (id: string) => {
+  try {
+    const { data } = await axiosClient.delete(`/books/${id}`);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to delete book";
       throw new Error(message);
     }
 

@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { logout } from "@/services/AuthService";
+import NavMobile from "./NavMobile";
 
 export default function Navbar() {
   const { user, setUser } = useUser();
@@ -32,9 +33,10 @@ export default function Navbar() {
 
   return (
     <div className="border-b bg-sidebar px-4 py-4 flex items-center justify-between">
+      <NavMobile />
       <Logo />
       {user?.role === USER_ROLES.USER && (
-        <div className="flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-6">
           {userNavRoutes.map((route) => (
             <Link
               key={route.path}

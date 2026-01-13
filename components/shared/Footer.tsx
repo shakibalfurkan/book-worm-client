@@ -68,15 +68,16 @@ export default function Footer() {
           <p className="text-sm text-muted-foreground">
             Subscribe to get the latest books, tutorials, and updates.
           </p>
-          <form className="flex gap-2 mt-2">
+          <form className="flex flex-col sm:flex-row gap-2 mt-2 w-full">
             <input
               type="email"
               placeholder="Your email"
-              className="flex-1 rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background"
+              className="w-full sm:flex-1 rounded-md border border-border px-3 py-2 text-sm
+               bg-background focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <Button
               type="submit"
-              className="bg-primary hover:bg-primary/90 text-background"
+              className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-background"
             >
               Subscribe
             </Button>

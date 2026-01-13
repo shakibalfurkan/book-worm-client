@@ -15,7 +15,7 @@ export default function Logo() {
             height={40}
             width={40}
             alt="BookWorm Logo"
-            className="transform group-hover:scale-105 transition-transform duration-300"
+            className="transform group-hover:scale-105 size-8 lg:size-10 transition-transform duration-300"
           />
         </div>
 

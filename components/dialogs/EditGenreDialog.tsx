@@ -12,7 +12,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon, EditIcon } from "lucide-react";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -20,11 +20,9 @@ import { TbEdit } from "react-icons/tb";
 import { IGenre } from "@/interfaces/genre.interface";
 import { useUpdateGenre } from "@/hooks/genre.hook";
 import { useState } from "react";
+import z from "zod";
 
-type TGenreFormData = {
-  name: string;
-  description: string;
-};
+type TGenreFormData = z.infer<typeof genreSchema>;
 
 export default function EditGenreDialog({ genre }: { genre: IGenre }) {
   const [open, setOpen] = useState(false);
@@ -56,8 +54,8 @@ export default function EditGenreDialog({ genre }: { genre: IGenre }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={"secondary"} size={"icon"} className="cursor-pointer">
-          <TbEdit />
+        <Button variant={"outline"} size={"icon"} className="cursor-pointer">
+          <EditIcon className="w-4 h-4 text-blue-500" />
         </Button>
       </DialogTrigger>
 
@@ -127,7 +125,7 @@ export default function EditGenreDialog({ genre }: { genre: IGenre }) {
             </DialogClose>
 
             <Button disabled={isPending} type="submit">
-              {isPending ? "Updating..." : "Update"}
+              {isPending ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>
         </form>

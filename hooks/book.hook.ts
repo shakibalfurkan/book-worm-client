@@ -1,5 +1,10 @@
 import { IBook, IBookFilters } from "@/interfaces/book.interface";
-import { createBook, deleteBook, getAllBooks } from "@/services/BookService";
+import {
+  createBook,
+  deleteBook,
+  getAllBooks,
+  updateBook,
+} from "@/services/BookService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,6 +31,22 @@ export const useGetAllBooks = (filters: IBookFilters) => {
   return useQuery<any, Error, FieldValues>({
     queryKey: ["GET_ALL_BOOKS", filters],
     queryFn: async () => await getAllBooks(filters),
+  });
+};
+
+export const useUpdateBook = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, formData }: { id: string; formData: FormData }) =>
+      updateBook(id, formData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["GET_ALL_BOOKS"] });
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 };
 

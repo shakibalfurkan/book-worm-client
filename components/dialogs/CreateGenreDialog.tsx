@@ -19,11 +19,9 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useCreateGenre } from "@/hooks/genre.hook";
 import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
+import z from "zod";
 
-type TGenreFormData = {
-  name: string;
-  description: string;
-};
+type TGenreFormData = z.infer<typeof genreSchema>;
 
 export default function CreateGenreDialog() {
   const [open, setOpen] = useState(false);
@@ -38,15 +36,11 @@ export default function CreateGenreDialog() {
 
   const {
     mutate: createGenre,
-    data: genreData,
     isSuccess,
     isPending,
     isError,
     error,
   } = useCreateGenre();
-
-  console.log(genreData);
-  console.log(error);
 
   useEffect(() => {
     if (isSuccess) {

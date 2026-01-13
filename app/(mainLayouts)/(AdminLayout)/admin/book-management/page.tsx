@@ -2,6 +2,7 @@
 
 import CreateBookDialog from "@/components/dialogs/books/CreateBookDialog";
 import DeleteBookDialog from "@/components/dialogs/books/DeleteBookDialog";
+import EditBookDialog from "@/components/dialogs/books/EditBookDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
@@ -92,7 +93,7 @@ export default function BookManagement() {
                   </div>
                 </TableCell>
                 <TableCell className="space-x-2">
-                  {/* <EditGenreDialog genre={genre} />*/}
+                  <EditBookDialog book={book} />
                   <DeleteBookDialog id={book?._id} />
                 </TableCell>
               </TableRow>

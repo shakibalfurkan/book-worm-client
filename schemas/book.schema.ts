@@ -32,3 +32,17 @@ export const bookSchema = z.object({
     .min(1, "Total pages must be at least 1")
     .trim(),
 });
+
+export const editBookSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  author: z.string().min(2, "Author name is required"),
+  genre: z.string().min(1, "Genre is required"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  totalPages: z.string().min(1, "Total pages must be at least 1"),
+  coverImage: z
+    .instanceof(File)
+    .refine((file) => file.size <= 5 * 1024 * 1024, {
+      message: "Cover image must be less than 5MB",
+    })
+    .optional(),
+});

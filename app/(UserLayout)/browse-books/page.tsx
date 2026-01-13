@@ -283,9 +283,7 @@ export default function BrowseBooks() {
       {/* main filters and stats */}
       <div
         className={`transition-all duration-300 ease-out overflow-hidden ${
-          showFilters
-            ? "max-h-125 opacity-100"
-            : "max-h-0 opacity-0 pointer-events-none"
+          showFilters ? "opacity-100" : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

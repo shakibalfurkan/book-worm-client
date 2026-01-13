@@ -13,6 +13,7 @@ export interface IBook {
     currentlyReading: number;
     read: number;
   };
+  reviews: string[];
   avgRating: number;
   totalReviews: number;
   createdAt: string;

@@ -50,6 +50,23 @@ export const getAllBooks = async (filters: IBookFilters) => {
   }
 };
 
+export const getBookById = async (id: string) => {
+  try {
+    const { data } = await axiosClient.get(`/books/${id}`);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to get book";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
 export const updateBook = async (id: string, formData: FormData) => {
   try {
     const { data } = await axiosClient.put(`/books/${id}`, formData, {

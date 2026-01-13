@@ -611,7 +611,7 @@ export default function BrowseBooks() {
 
                     {/* Mobile/Tablet Action Buttons */}
                     <div className="pt-2">
-                      <Link href={`/books/${book._id}`}>
+                      <Link href={`/browse-books/${book._id}`}>
                         <Button
                           size="sm"
                           variant="default"

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
+import Logo from "./Logo";
 
 export default function Footer() {
   return (
@@ -10,12 +11,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo & Description */}
         <div className="flex flex-col gap-4">
-          <Link
-            href="/"
-            className="text-2xl font-bold font-display text-foreground"
-          >
-            BookWorm
-          </Link>
+          <Logo />
           <p className="text-sm text-muted-foreground">
             Discover your next favorite book, track your reading, and explore
             curated collections.
@@ -76,7 +72,7 @@ export default function Footer() {
                bg-background focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <Button
-              type="submit"
+              type="button"
               className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-background"
             >
               Subscribe

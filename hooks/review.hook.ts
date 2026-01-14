@@ -5,6 +5,7 @@ import {
   createReview,
   deleteReview,
   getAllReviews,
+  updateReview,
 } from "@/services/ReviewService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -33,6 +34,22 @@ export const useGetAllReviews = () => {
   });
 };
 
+export const useUpdateReview = () => {
+  const queryClient = useQueryClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return useMutation<any, Error, Record<string, string>>({
+    mutationKey: ["UPDATE_REVIEW"],
+    mutationFn: async (review) => await updateReview(review),
+
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["GET_ALL_REVIEWS"] });
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
 export const useDeleteReview = () => {
   const queryClient = useQueryClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

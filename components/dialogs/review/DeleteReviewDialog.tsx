@@ -43,7 +43,7 @@ export default function DeleteReviewDialog({ reviewId }: { reviewId: string }) {
         {isError && (
           <Alert variant="destructive" className="mb-5">
             <AlertCircleIcon />
-            <AlertTitle>Unable to delete genre.</AlertTitle>
+            <AlertTitle>Unable to delete review.</AlertTitle>
             <AlertDescription>
               <p>{error?.message}</p>
             </AlertDescription>
@@ -52,7 +52,7 @@ export default function DeleteReviewDialog({ reviewId }: { reviewId: string }) {
 
         <DialogHeader className="mb-4">
           <DialogTitle className="text-center">
-            Are you sure you want to delete this genre?
+            Are you sure you want to delete this review?
           </DialogTitle>
         </DialogHeader>
 

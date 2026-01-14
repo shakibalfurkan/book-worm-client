@@ -38,6 +38,24 @@ export const getAllReviews = async () => {
   }
 };
 
+export const updateReview = async (review: Record<string, string>) => {
+  try {
+    const { data } = await axiosInstance.patch(`/reviews/${review.id}`, {
+      status: review.status,
+    });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to update review";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
 export const deleteReview = async (reviewId: string) => {
   try {
     const { data } = await axiosInstance.delete(`/reviews/${reviewId}`);

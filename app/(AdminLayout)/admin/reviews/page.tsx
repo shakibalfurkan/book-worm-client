@@ -14,18 +14,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetAllReviews } from "@/hooks/review.hook";
+import { useGetAllReviews, useUpdateReview } from "@/hooks/review.hook";
 import { IReview } from "@/interfaces/review.interface";
 import { Star } from "lucide-react";
 
 export default function Reviews() {
   const { data: reviews, isPending, error, isError } = useGetAllReviews();
-  console.log(reviews);
+  const { mutate: updateReview, isPending: isUpdating } = useUpdateReview();
+
+  const handleStatus = (id: string, status: string) => {
+    updateReview({ id, status });
+  };
+
   return (
     <section className="max-w-7xl mx-auto p-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-semibold font-serif">Manage Genres</h2>
-        {/* <CreateGenreDialog /> */}
+        <h2 className="text-3xl font-semibold font-serif">Manage Reviews</h2>
       </div>
 
       <div className="mt-4">
@@ -101,16 +105,24 @@ export default function Reviews() {
                     <span className="capitalize">{review.status}</span>
                   </Badge>
                 </TableCell>
-                <TableCell className="space-x-2">
+                <TableCell className="flex w-full justify-center items-center gap-2">
                   {review.status === "PENDING" ? (
                     <Button
+                      disabled={isUpdating}
+                      onClick={() => handleStatus(review._id, "APPROVED")}
                       size="sm"
-                      className="bg-emerald-600 hover:bg-emerald-700 h-8"
+                      className="bg-emerald-600 hover:bg-emerald-700 h-8 cursor-pointer"
                     >
                       Approve
                     </Button>
                   ) : (
-                    <Button size="sm" variant="destructive" className="h-8">
+                    <Button
+                      disabled={isUpdating}
+                      onClick={() => handleStatus(review._id, "PENDING")}
+                      size="sm"
+                      variant="destructive"
+                      className="h-8 cursor-pointer"
+                    >
                       Reject
                     </Button>
                   )}

@@ -35,3 +35,22 @@ export const getAllUsersFromDB = async () => {
     throw new Error("Something went wrong");
   }
 };
+
+export const updateUser = async (user: { id: string; role: string }) => {
+  try {
+    const { data } = await axiosInstance.patch(`/users/${user.id}`, {
+      role: user.role,
+    });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to update user";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};

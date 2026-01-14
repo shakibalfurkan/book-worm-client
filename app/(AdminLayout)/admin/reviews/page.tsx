@@ -1,6 +1,5 @@
 "use client";
 
-import DeleteBookDialog from "@/components/dialogs/books/DeleteBookDialog";
 import DeleteReviewDialog from "@/components/dialogs/review/DeleteReviewDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

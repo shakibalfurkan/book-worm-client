@@ -3,14 +3,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -25,12 +17,11 @@ import { USER_ROLES } from "@/constant";
 import { IUser } from "@/context/user.provider";
 import { useGetAllUsers, useUpdateUser } from "@/hooks/user.hook";
 import { ShieldCheck, UserCog } from "lucide-react";
-import { useEffect, useState } from "react";
 
 export default function UserManagement() {
   const { data: users, isPending, error, isError } = useGetAllUsers();
 
-  const { mutate: updateUser, isPending: isUpdating } = useUpdateUser();
+  const { mutate: updateUser } = useUpdateUser();
 
   const handleUpdateUser = (id: string, userRole: string) => {
     updateUser({

@@ -6,6 +6,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RatingGroupAdvanced } from "@/components/ui/rating-group";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/context/user.provider";
@@ -22,6 +31,21 @@ interface IProps {
   params: Promise<{ bookId: string }>;
 }
 
+const shelveData = [
+  {
+    value: "WANT_TO_READ",
+    label: "Want to Read",
+  },
+  {
+    value: "CURRENTLY_READING",
+    label: "Currently Reading",
+  },
+  {
+    value: "READ",
+    label: "Read",
+  },
+];
+
 export default function BookDetails({ params }: IProps) {
   const resolvedParams = use(params);
   const bookId = resolvedParams.bookId;
@@ -35,18 +59,21 @@ export default function BookDetails({ params }: IProps) {
   const { mutate: toggleShelve, isPending: toggleShelvePending } =
     useToggleShelve();
 
-  const handleToggleShelve = () => {
-    toggleShelve(
-      {
-        user: user?._id as string,
-        book: bookId,
+  const handleToggleShelve = (shelve?: string) => {
+    const shelveData: { user: string; book: string; shelve?: string } = {
+      user: user?._id as string,
+      book: bookId,
+    };
+
+    if (shelve) {
+      shelveData.shelve = shelve;
+    }
+
+    toggleShelve(shelveData, {
+      onSuccess: () => {
+        refetch();
       },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-      }
-    );
+    });
   };
 
   const isShelved = data?.userShelves.some((id) => id === user!._id);
@@ -180,7 +207,7 @@ export default function BookDetails({ params }: IProps) {
           <div className="flex flex-wrap gap-3">
             {isShelved ? (
               <Button
-                onClick={handleToggleShelve}
+                onClick={() => handleToggleShelve()}
                 disabled={toggleShelvePending}
                 variant="outline"
                 className="gap-2 border-primary text-primary hover:bg-primary/10 cursor-pointer"
@@ -189,14 +216,24 @@ export default function BookDetails({ params }: IProps) {
                 {toggleShelvePending ? "Removing..." : "Remove from Shelf"}
               </Button>
             ) : (
-              <Button
-                onClick={handleToggleShelve}
-                disabled={toggleShelvePending}
-                className="gap-2 bg-primary hover:bg-brand-hover text-background cursor-pointer"
-              >
-                <BookOpen className="w-4 h-4" />
-                {toggleShelvePending ? "Adding..." : "Add to Shelf"}
-              </Button>
+              <Select onValueChange={(value) => handleToggleShelve(value)}>
+                <SelectTrigger
+                  className="w-45 border-primary text-primary hover:bg-primary/10 cursor-pointer"
+                  disabled={toggleShelvePending}
+                >
+                  <SelectValue placeholder="Set to Shelve" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Select Shelve</SelectLabel>
+                    {shelveData.map((shelve) => (
+                      <SelectItem key={shelve.value} value={shelve.value}>
+                        {shelve.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             )}
           </div>
 

@@ -1,5 +1,7 @@
+import { ApiResponse } from "@/interfaces";
+import { IUserShelve } from "@/interfaces/shelve.interface";
 import { getMyShelvesFromDB, toggleShelve } from "@/services/ShelveService";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useToggleShelve = () => {
@@ -25,13 +27,8 @@ export const useToggleShelve = () => {
 };
 
 export const useGetMyShelves = () => {
-  return useMutation({
-    mutationFn: async () => await getMyShelvesFromDB(),
-    onSuccess: (data) => {
-      toast.success(data.message);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+  return useQuery<ApiResponse<IUserShelve[]>, Error>({
+    queryKey: ["GET_MY_SHELVES"],
+    queryFn: async () => await getMyShelvesFromDB(),
   });
 };

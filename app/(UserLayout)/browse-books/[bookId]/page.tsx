@@ -50,7 +50,7 @@ export default function BookDetails({ params }: IProps) {
   };
 
   const isShelved = data?.userShelves.some((id) => id === user!._id);
-
+  console.log(data);
   if (isLoading) {
     return (
       <section className="min-h-screen max-w-7xl mx-auto px-4 py-10">
@@ -134,7 +134,7 @@ export default function BookDetails({ params }: IProps) {
             fill
             className="object-cover"
           />
-          <Badge className="absolute top-4 right-4 bg-background/90 backdrop-blur border border-border">
+          <Badge className="absolute text-foreground top-4 right-4 bg-background/90 backdrop-blur border border-border">
             {data?.genre?.name}
           </Badge>
         </div>
@@ -172,7 +172,7 @@ export default function BookDetails({ params }: IProps) {
 
             <div className="flex items-center gap-2 text-muted-foreground">
               <Heart className="w-4 h-4" />
-              <span>{book?.userShelves?.length || 0} shelved</span>
+              <span>{data?.userShelves?.length || 0} shelved</span>
             </div>
           </div>
 

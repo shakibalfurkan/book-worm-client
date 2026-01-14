@@ -1,9 +1,8 @@
-import { toggleShelve } from "@/services/ShelveService";
+import { getMyShelvesFromDB, toggleShelve } from "@/services/ShelveService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useToggleShelve = () => {
-  const queryClient = useQueryClient();
   return useMutation<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any,
@@ -17,7 +16,18 @@ export const useToggleShelve = () => {
     mutationFn: async (shelveData) => await toggleShelve(shelveData),
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["GET_BOOK_BY_ID"] });
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useGetMyShelves = () => {
+  return useMutation({
+    mutationFn: async () => await getMyShelvesFromDB(),
+    onSuccess: (data) => {
       toast.success(data.message);
     },
     onError: (error) => {

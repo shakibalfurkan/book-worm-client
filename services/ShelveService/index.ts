@@ -23,3 +23,19 @@ export const toggleShelve = async (shelveData: {
     throw new Error("Something went wrong");
   }
 };
+export const getMyShelvesFromDB = async () => {
+  try {
+    const { data } = await axiosClient.get("/shelves/my-shelves");
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to get shelves";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};

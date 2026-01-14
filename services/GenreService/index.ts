@@ -1,10 +1,12 @@
-import axiosClient from "@/lib/Axios/axios-client";
+"use server";
+
+import axiosInstance from "@/lib/Axios/axiosInstance";
 import { isAxiosError } from "axios";
 import { FieldValues } from "react-hook-form";
 
 export const createGenre = async (genreData: FieldValues) => {
   try {
-    const { data } = await axiosClient.post("/genres", genreData);
+    const { data } = await axiosInstance.post("/genres", genreData);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -21,7 +23,7 @@ export const createGenre = async (genreData: FieldValues) => {
 
 export const getAllGenres = async () => {
   try {
-    const { data } = await axiosClient.get("/genres");
+    const { data } = await axiosInstance.get("/genres");
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -44,7 +46,7 @@ export const updateGenre = async ({
   genreData: FieldValues;
 }) => {
   try {
-    const { data } = await axiosClient.put(`/genres/${id}`, genreData);
+    const { data } = await axiosInstance.put(`/genres/${id}`, genreData);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -61,7 +63,7 @@ export const updateGenre = async ({
 
 export const deleteGenre = async (id: string) => {
   try {
-    const { data } = await axiosClient.delete(`/genres/${id}`);
+    const { data } = await axiosInstance.delete(`/genres/${id}`);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {

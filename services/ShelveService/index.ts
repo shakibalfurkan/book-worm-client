@@ -1,4 +1,6 @@
-import axiosClient from "@/lib/Axios/axios-client";
+"use server";
+
+import axiosInstance from "@/lib/Axios/axiosInstance";
 import { isAxiosError } from "axios";
 
 export const toggleShelve = async (shelveData: {
@@ -6,7 +8,7 @@ export const toggleShelve = async (shelveData: {
   book: string;
 }) => {
   try {
-    const { data } = await axiosClient.post(
+    const { data } = await axiosInstance.post(
       "/shelves/toggle-shelve",
       shelveData
     );
@@ -25,7 +27,7 @@ export const toggleShelve = async (shelveData: {
 };
 export const getMyShelvesFromDB = async () => {
   try {
-    const { data } = await axiosClient.get("/shelves/my-shelves");
+    const { data } = await axiosInstance.get("/shelves/my-shelves");
     return data;
   } catch (error) {
     if (isAxiosError(error)) {

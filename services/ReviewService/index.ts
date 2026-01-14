@@ -1,10 +1,13 @@
+"use server";
+
 import { TReviewFormData } from "@/components/dialogs/review/AddReviewDialog";
-import axiosClient from "@/lib/Axios/axios-client";
+import axiosInstance from "@/lib/Axios/axiosInstance";
+
 import { isAxiosError } from "axios";
 
 export const createReview = async (reviewData: TReviewFormData) => {
   try {
-    const { data } = await axiosClient.post("/reviews", reviewData);
+    const { data } = await axiosInstance.post("/reviews", reviewData);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -20,7 +23,7 @@ export const createReview = async (reviewData: TReviewFormData) => {
 };
 export const getAllReviews = async () => {
   try {
-    const { data } = await axiosClient.get("/reviews");
+    const { data } = await axiosInstance.get("/reviews");
     return data;
   } catch (error) {
     if (isAxiosError(error)) {

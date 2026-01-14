@@ -1,10 +1,11 @@
+"use server";
 import { IBookFilters } from "@/interfaces/book.interface";
-import axiosClient from "@/lib/Axios/axios-client";
+import axiosInstance from "@/lib/Axios/axiosInstance";
 import { isAxiosError } from "axios";
 
 export const createBook = async (bookData: FormData) => {
   try {
-    const { data } = await axiosClient.post("/books", bookData);
+    const { data } = await axiosInstance.post("/books", bookData);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -35,7 +36,7 @@ export const getAllBooks = async (filters: IBookFilters) => {
     if (filters.page) params.page = filters.page;
     if (filters.limit) params.limit = filters.limit;
 
-    const { data } = await axiosClient.get(`/books`, { params });
+    const { data } = await axiosInstance.get(`/books`, { params });
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -52,7 +53,7 @@ export const getAllBooks = async (filters: IBookFilters) => {
 
 export const getBookById = async (id: string) => {
   try {
-    const { data } = await axiosClient.get(`/books/${id}`);
+    const { data } = await axiosInstance.get(`/books/${id}`);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -69,7 +70,7 @@ export const getBookById = async (id: string) => {
 
 export const getRecommendedBooks = async () => {
   try {
-    const { data } = await axiosClient.get(`/books/recommended`);
+    const { data } = await axiosInstance.get(`/books/recommended`);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -86,7 +87,7 @@ export const getRecommendedBooks = async () => {
 
 export const updateBook = async (id: string, formData: FormData) => {
   try {
-    const { data } = await axiosClient.put(`/books/${id}`, formData, {
+    const { data } = await axiosInstance.put(`/books/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -106,7 +107,7 @@ export const updateBook = async (id: string, formData: FormData) => {
 
 export const deleteBook = async (id: string) => {
   try {
-    const { data } = await axiosClient.delete(`/books/${id}`);
+    const { data } = await axiosInstance.delete(`/books/${id}`);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {

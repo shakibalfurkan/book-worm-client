@@ -18,7 +18,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useUserRegistration } from "@/hooks/auth.hook";
 import { signupSchema } from "@/schemas/auth.schema";
-import { USER_ROLES } from "@/constant";
 import { useUser } from "@/context/user.provider";
 
 type TSignUpFormData = {
@@ -30,13 +29,12 @@ type TSignUpFormData = {
 
 export default function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const { setUser } = useUser();
+  const { refetchUser } = useUser();
 
   const router = useRouter();
 
   const {
     mutate: registerUser,
-    data: userData,
     isSuccess,
     isPending,
     isError,
@@ -67,16 +65,11 @@ export default function Signup() {
   };
 
   useEffect(() => {
-    if (isSuccess && userData?.data) {
-      setUser(userData.data);
-
-      if (userData.data.role === USER_ROLES.ADMIN) {
-        router.push("/admin/dashboard");
-      } else if (userData.data.role === USER_ROLES.USER) {
-        router.push("/user/my-library");
-      }
+    if (!isPending && isSuccess) {
+      refetchUser();
+      router.push("/");
     }
-  }, [isSuccess, userData, setUser, router]);
+  }, [isPending, isSuccess, router, refetchUser]);
 
   return (
     <section className="max-w-7xl mx-auto p-4">

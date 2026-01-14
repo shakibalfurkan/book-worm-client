@@ -1,8 +1,10 @@
-import axiosClient from "@/lib/Axios/axios-client";
+"use server";
+
+import axiosInstance from "@/lib/Axios/axiosInstance";
 import { isAxiosError } from "axios";
 export const getUserFromDB = async () => {
   try {
-    const { data } = await axiosClient.get(`/users/me`);
+    const { data } = await axiosInstance.get(`/users/me`);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -19,7 +21,7 @@ export const getUserFromDB = async () => {
 };
 export const getAllUsersFromDB = async () => {
   try {
-    const { data } = await axiosClient.get("/users");
+    const { data } = await axiosInstance.get("/users");
     return data;
   } catch (error) {
     if (isAxiosError(error)) {

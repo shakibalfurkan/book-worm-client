@@ -23,12 +23,9 @@ export default function Navbar() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    const result = await logout();
-
-    if (result?.success) {
-      setUser(null);
-      router.push("/login");
-    }
+    await logout();
+    setUser(null);
+    router.push("/login");
   };
 
   return (

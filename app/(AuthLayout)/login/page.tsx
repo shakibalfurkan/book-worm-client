@@ -21,7 +21,6 @@ import { useRouter } from "next/navigation";
 import { loginSchema } from "@/schemas/auth.schema";
 import { useUserLogin } from "@/hooks/auth.hook";
 import { useUser } from "@/context/user.provider";
-import { USER_ROLES } from "@/constant";
 
 type TLoginFormData = {
   email: string;
@@ -31,13 +30,12 @@ type TLoginFormData = {
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const { setUser } = useUser();
+  const { refetchUser } = useUser();
 
   const router = useRouter();
 
   const {
     mutate: loginUser,
-    data: userData,
     isSuccess,
     isPending,
     isError,
@@ -61,16 +59,11 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (isSuccess && userData?.data) {
-      setUser(userData.data);
-
-      if (userData.data.role === USER_ROLES.ADMIN) {
-        router.push("/admin/dashboard");
-      } else if (userData.data.role === USER_ROLES.USER) {
-        router.push("/user/my-library");
-      }
+    if (!isPending && isSuccess) {
+      refetchUser();
+      router.push("/");
     }
-  }, [isSuccess, userData, setUser, router]);
+  }, [isPending, isSuccess, router, refetchUser]);
 
   return (
     <section className="max-w-7xl mx-auto p-4">

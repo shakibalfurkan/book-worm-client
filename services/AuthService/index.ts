@@ -1,15 +1,41 @@
-import envConfig from "@/config/envConfig";
-import axiosClient from "@/lib/Axios/axios-client";
-import axios, { isAxiosError } from "axios";
+"use server";
+import { isAxiosError } from "axios";
 import { FieldValues } from "react-hook-form";
+import { cookies } from "next/headers";
+import { jwtDecode } from "jwt-decode";
+import axiosInstance from "@/lib/Axios/axiosInstance";
+
+export const getCurrentUser = async () => {
+  const accessToken = (await cookies()).get("accessToken")?.value;
+
+  let decodedToken = null;
+
+  if (accessToken) {
+    decodedToken = await jwtDecode(accessToken);
+
+    return {
+      id: decodedToken.id,
+      email: decodedToken.email,
+      role: decodedToken.role,
+    };
+  }
+
+  return decodedToken;
+};
 
 export const registerUserIntoDB = async (userData: FormData) => {
   try {
-    const { data } = await axiosClient.post("/auth/register", userData, {
+    const { data } = await axiosInstance.post("/auth/register", userData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
+    const cookie = await cookies();
+    if (data.success) {
+      cookie.set("accessToken", data?.data?.accessToken);
+      cookie.set("refreshToken", data?.data?.refreshToken);
+    }
+
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -26,7 +52,13 @@ export const registerUserIntoDB = async (userData: FormData) => {
 
 export const loginUser = async (userData: FieldValues) => {
   try {
-    const { data } = await axiosClient.post("/auth/login", userData);
+    const { data } = await axiosInstance.post("/auth/login", userData);
+
+    const cookie = await cookies();
+    if (data.success) {
+      cookie.set("accessToken", data?.data?.accessToken);
+      cookie.set("refreshToken", data?.data?.refreshToken);
+    }
 
     return data;
   } catch (error) {
@@ -44,24 +76,7 @@ export const loginUser = async (userData: FieldValues) => {
 };
 
 export const logout = async () => {
-  try {
-    const { data } = await axios.post(
-      `${envConfig.baseApi}/auth/logout`,
-      {},
-      { withCredentials: true }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error)) {
-      const message =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        "Failed to logout";
-
-      throw new Error(message);
-    }
-
-    throw new Error("Something went wrong");
-  }
+  const cookie = await cookies();
+  cookie.delete("accessToken");
+  cookie.delete("refreshToken");
 };

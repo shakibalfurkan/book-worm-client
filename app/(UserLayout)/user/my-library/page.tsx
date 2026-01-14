@@ -9,15 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/context/user.provider";
 import { useGetMyShelves } from "@/hooks/shelve.hook";
 import { IUserShelve } from "@/interfaces/shelve.interface";
-import {
-  BookOpen,
-  CheckCircle2,
-  Heart,
-  Star,
-  Sparkles,
-  Trash2,
-  Eye,
-} from "lucide-react";
+import { BookOpen, CheckCircle2, Heart, Star, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 

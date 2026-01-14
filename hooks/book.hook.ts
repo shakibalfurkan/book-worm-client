@@ -4,6 +4,7 @@ import {
   deleteBook,
   getAllBooks,
   getBookById,
+  getRecommendedBooks,
   updateBook,
 } from "@/services/BookService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -39,6 +40,14 @@ export const useGetBookById = (id: string) => {
   return useQuery<any, Error, FieldValues>({
     queryKey: ["GET_BOOK_BY_ID"],
     queryFn: async () => await getBookById(id),
+  });
+};
+
+export const useGetRecommendedBooks = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return useQuery<any, Error, FieldValues>({
+    queryKey: ["GET_RECOMMENDED_BOOKS"],
+    queryFn: async () => await getRecommendedBooks(),
   });
 };
 

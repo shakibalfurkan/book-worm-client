@@ -67,6 +67,23 @@ export const getBookById = async (id: string) => {
   }
 };
 
+export const getRecommendedBooks = async () => {
+  try {
+    const { data } = await axiosClient.get(`/books/recommended`);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to get books";
+      throw new Error(message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+};
+
 export const updateBook = async (id: string, formData: FormData) => {
   try {
     const { data } = await axiosClient.put(`/books/${id}`, formData, {

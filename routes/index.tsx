@@ -10,8 +10,8 @@ export const userNavRoutes = [
     label: "Library",
   },
   {
-    path: "/user/dashboard",
-    label: "Dashboard",
+    path: "/user/home",
+    label: "Home",
   },
   {
     path: "/browse-books",

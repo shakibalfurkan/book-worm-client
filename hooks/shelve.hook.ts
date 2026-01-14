@@ -1,7 +1,7 @@
 import { ApiResponse } from "@/interfaces";
 import { IUserShelve } from "@/interfaces/shelve.interface";
 import { getMyShelvesFromDB, toggleShelve } from "@/services/ShelveService";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useToggleShelve = () => {

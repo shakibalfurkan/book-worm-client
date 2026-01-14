@@ -43,24 +43,6 @@ export const loginUser = async (userData: FieldValues) => {
   }
 };
 
-export const getUserFromDB = async () => {
-  try {
-    const { data } = await axiosClient.get(`/auth/me`);
-    return data;
-  } catch (error) {
-    if (isAxiosError(error)) {
-      const message =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        "Failed to get user from DB";
-
-      throw new Error(message);
-    }
-
-    throw new Error("Something went wrong");
-  }
-};
-
 export const logout = async () => {
   try {
     const { data } = await axios.post(

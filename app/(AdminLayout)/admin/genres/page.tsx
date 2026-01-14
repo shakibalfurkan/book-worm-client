@@ -16,16 +16,10 @@ import { useGetAllGenres } from "@/hooks/genre.hook";
 import { IGenre } from "@/interfaces/genre.interface";
 
 export default function Genres() {
-  const {
-    data: genres,
-    isPending,
-    error,
-    isError,
-    isSuccess,
-  } = useGetAllGenres();
+  const { data: genres, isPending, error, isError } = useGetAllGenres();
 
   return (
-    <section className="max-w-7xl mx-auto">
+    <section className="max-w-7xl mx-auto p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-semibold font-serif">Manage Genres</h2>
         <CreateGenreDialog />

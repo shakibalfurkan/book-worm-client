@@ -77,7 +77,7 @@ export default function BookDetails({ params }: IProps) {
   };
 
   const isShelved = data?.userShelves.some((id) => id === user!._id);
-  console.log(data);
+
   if (isLoading) {
     return (
       <section className="min-h-screen max-w-7xl mx-auto px-4 py-10">

@@ -1,5 +1,5 @@
 import { isAuthRoute } from "@/constant";
-import { getUserFromDB } from "@/services/AuthService";
+import { getUserFromDB } from "@/services/UserService";
 
 import {
   createContext,
@@ -45,10 +45,10 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setIsUserLoading(true);
     try {
       const response = await getUserFromDB();
-      console.log(response);
+
       setUser(response?.data || null);
-    } catch (error) {
-      console.error(error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch {
       setUser(null);
     } finally {
       setIsUserLoading(false);

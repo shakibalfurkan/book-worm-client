@@ -68,8 +68,6 @@ export default function Signup() {
 
   useEffect(() => {
     if (isSuccess && userData?.data) {
-      console.log("Registration successful:", userData);
-
       setUser(userData.data);
 
       if (userData.data.role === USER_ROLES.ADMIN) {

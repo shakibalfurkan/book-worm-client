@@ -1,4 +1,4 @@
-import { IBook, IBookFilters } from "@/interfaces/book.interface";
+import { IBookFilters } from "@/interfaces/book.interface";
 import {
   createBook,
   deleteBook,

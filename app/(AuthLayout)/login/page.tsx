@@ -62,8 +62,6 @@ export default function Login() {
 
   useEffect(() => {
     if (isSuccess && userData?.data) {
-      console.log("Login successful:", userData);
-
       setUser(userData.data);
 
       if (userData.data.role === USER_ROLES.ADMIN) {

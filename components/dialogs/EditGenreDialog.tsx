@@ -16,7 +16,6 @@ import { AlertCircleIcon, EditIcon } from "lucide-react";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { TbEdit } from "react-icons/tb";
 import { IGenre } from "@/interfaces/genre.interface";
 import { useUpdateGenre } from "@/hooks/genre.hook";
 import { useState } from "react";

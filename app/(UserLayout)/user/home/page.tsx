@@ -41,7 +41,7 @@ export default function UserHome() {
 
   const recommendations = data?.data?.books || [];
   const myShelves: IUserShelve[] = shelvesData?.data || [];
-  console.log(myShelves);
+
   const stats = useMemo(() => {
     const currentYear = new Date().getFullYear();
 

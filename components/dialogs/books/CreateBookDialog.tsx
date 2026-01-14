@@ -54,7 +54,6 @@ export default function CreateBookDialog() {
 
   const {
     mutate: createBook,
-    data: bookData,
     isError,
     error,
     isPending,
@@ -71,8 +70,6 @@ export default function CreateBookDialog() {
       totalPages: "",
     },
   });
-
-  console.log(bookData);
 
   const onSubmit = async (data: TBookFormData) => {
     const bookData = {

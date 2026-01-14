@@ -25,8 +25,6 @@ axiosClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    console.log(error.response.data.message);
-
     if (!error.response) {
       return Promise.reject(error);
     }

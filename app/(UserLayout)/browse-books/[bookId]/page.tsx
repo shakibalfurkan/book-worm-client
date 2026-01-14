@@ -5,10 +5,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { RatingGroupAdvanced } from "@/components/ui/rating-group";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/context/user.provider";
 import { useGetBookById } from "@/hooks/book.hook";
+import { useToggleShelve } from "@/hooks/shelve.hook";
 import { IBook } from "@/interfaces/book.interface";
 import { IReview } from "@/interfaces/review.interface";
 import { AlertCircle, BookOpen, Heart, RefreshCw, Star } from "lucide-react";
@@ -29,7 +31,25 @@ export default function BookDetails({ params }: IProps) {
   const { data: book, isLoading, isError, refetch } = useGetBookById(bookId);
   const data: IBook = book?.data?.book;
   const reviews: IReview[] = book?.data?.reviews;
-  console.log(data);
+
+  const { mutate: toggleShelve, isPending: toggleShelvePending } =
+    useToggleShelve();
+
+  const handleToggleShelve = () => {
+    toggleShelve(
+      {
+        user: user?._id as string,
+        book: bookId,
+      },
+      {
+        onSuccess: () => {
+          refetch();
+        },
+      }
+    );
+  };
+
+  const isShelved = data?.userShelves.some((id) => id === user!._id);
 
   if (isLoading) {
     return (
@@ -152,21 +172,32 @@ export default function BookDetails({ params }: IProps) {
 
             <div className="flex items-center gap-2 text-muted-foreground">
               <Heart className="w-4 h-4" />
-              <span>
-                {(data?.shelfCount?.read || 0) +
-                  (data?.shelfCount?.currentlyReading || 0) +
-                  (data?.shelfCount?.wantToRead || 0)}{" "}
-                shelved
-              </span>
+              <span>{book?.userShelves?.length || 0} shelved</span>
             </div>
           </div>
 
           {/* Actions */}
           <div className="flex flex-wrap gap-3">
-            <Button className="gap-2 bg-primary hover:bg-brand-hover text-background">
-              <BookOpen className="w-4 h-4" />
-              Add to Shelf
-            </Button>
+            {isShelved ? (
+              <Button
+                onClick={handleToggleShelve}
+                disabled={toggleShelvePending}
+                variant="outline"
+                className="gap-2 border-primary text-primary hover:bg-primary/10 cursor-pointer"
+              >
+                <BookOpen className="w-4 h-4" />
+                {toggleShelvePending ? "Removing..." : "Remove from Shelf"}
+              </Button>
+            ) : (
+              <Button
+                onClick={handleToggleShelve}
+                disabled={toggleShelvePending}
+                className="gap-2 bg-primary hover:bg-brand-hover text-background cursor-pointer"
+              >
+                <BookOpen className="w-4 h-4" />
+                {toggleShelvePending ? "Adding..." : "Add to Shelf"}
+              </Button>
+            )}
           </div>
 
           {/* Description */}
@@ -195,12 +226,11 @@ export default function BookDetails({ params }: IProps) {
                   <div className="flex items-center justify-between">
                     <p className="font-medium">{review.user?.name}</p>
                     <div className="flex items-center gap-1">
-                      {[...Array(review.rating)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-4 h-4 fill-primary text-primary"
-                        />
-                      ))}
+                      <RatingGroupAdvanced
+                        allowHalf={true}
+                        readOnly={true}
+                        value={review.rating.toString()}
+                      />
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground">

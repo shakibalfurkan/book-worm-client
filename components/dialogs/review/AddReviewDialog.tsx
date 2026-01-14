@@ -62,7 +62,7 @@ export default function AddReviewDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => {}} variant="outline" className="gap-2">
+        <Button variant="outline" className="gap-2 cursor-pointer">
           <Star className="w-4 h-4" />
           Add Review
         </Button>

@@ -596,20 +596,15 @@ export default function BrowseBooks() {
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="w-3 h-3" />
                         <span className="hidden sm:inline">
-                          {(book?.shelfCount?.wantToRead || 0) +
-                            (book?.shelfCount?.currentlyReading || 0) +
-                            (book?.shelfCount?.read || 0)}{" "}
-                          shelved
+                          {book?.userShelves?.length || 0} shelved
                         </span>
                         <span className="sm:hidden">
-                          {(book?.shelfCount?.wantToRead || 0) +
-                            (book?.shelfCount?.currentlyReading || 0) +
-                            (book?.shelfCount?.read || 0)}
+                          {book?.userShelves?.length || 0}
                         </span>
                       </div>
                     </div>
 
-                    {/* Mobile/Tablet Action Buttons */}
+                    {/* View Action Button */}
                     <div className="pt-2">
                       <Link href={`/browse-books/${book._id}`}>
                         <Button
